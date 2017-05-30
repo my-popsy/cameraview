@@ -483,7 +483,13 @@ class Camera2 extends CameraViewImpl {
             mCamera.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()),
                     mSessionCallback, null);
         } catch (CameraAccessException e) {
-            throw new RuntimeException("Failed to start camera session");
+            if (e.getReason() == CameraAccessException.CAMERA_DISCONNECTED) {
+                mCamera = null;
+                start();
+
+            } else {
+                throw new RuntimeException();
+            }
         }
     }
 
